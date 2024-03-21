@@ -58,4 +58,4 @@ def seleniumGetData(historyDataPath, stockName):
 # 測試用
 if __name__ == '__main__':
     absPath = "D:\pycharm\MarketAnalysis\Main"
-    seleniumGetData("D:\pycharm\MarketAnalysis", "BTC-USD")
+    seleniumGetData("D:\pycharm\MarketAnalysis\Data", "BTC-USD")

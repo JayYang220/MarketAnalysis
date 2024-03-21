@@ -1,51 +1,46 @@
 import pandas as pd
 import os
-from WebBrowser import seleniumGetData
-import datetime
-import numpy as np
-from pandas_datareader import data
-import pandas_datareader.data as web
+from API import StockManager
 
 
+def main():
+    # 取得絕對路徑及建立StockManager，管理下載的歷史資料
+    manager = StockManager(absPath=os.path.abspath("../"))
 
-
-# 取得絕對路徑，以便保存下載歷史資料
-absPath = os.path.abspath("../")
-historyDataPath = os.path.join(absPath, "data")
-
-'''
-ans = input('是否要下載歷史資料? (y/n)\n')
-if ans.lower() == 'y':
     while True:
-        stockName = input('請輸入股票名稱:\n')
-        try:
-            print("下載中...")
-            seleniumGetData(historyDataPath, stockName)
-            break
-        except Exception as e:
-            print(e)
+        while True:
+            print('已下載的資料:')
+            manager.showStockList()
+            ans = input('選擇股票或其他功能 (A=Add New Stock, U=Update all History)\n')
+            try:
+                ans = int(ans)
+                if 0 <= ans < len(manager.stockList):
+                    index = ans
+                    break
+            except:
+                if ans.lower() == "a":
+                    stockName = input("請輸入股票名稱:\n")
+                    res = manager.createStockClass(stockName)
+                    if res is not True:
+                        print(res)
 
-while True:
-    print('請選擇要讀取的資料:')
-    csvList = os.listdir(historyDataPath)
-    for index, csvFile in enumerate(csvList):
-        print(f"{index}: {csvFile}")
+                elif ans.lower() == "u":
+                    manager.updateAll()
+                else:
+                    print("輸入錯誤")
 
-    try:
-        ans = int(input())
-    except:
-        print('輸入錯誤')
-    if 0 <= ans < len(csvList):
-        # 讀取並轉換為DataFrame
-        df = pd.read_csv(os.path.join(historyDataPath, csvList[ans]))
+        while True:
+            ans = input("選擇功能 (I=Show Company Info, H=Show History Data, U=UpdateHistoryData, 0=Return)\n")
+            if ans.lower() == "i":
+                manager.stockList[index].showInfo()
+            elif ans.lower() == "h":
+                manager.stockList[index].showHistoryData()
+            elif ans.lower() == "u":
+                manager.stockList[index].updateHistory()
+            elif ans == "0":
+                break
 
-        # 測試
-        print(df.head())
-        break
-    else:
-        print('輸入錯誤')
-'''
 
+main()
 
 os.system('pause')
-
