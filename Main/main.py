@@ -1,11 +1,19 @@
 import pandas as pd
 import os
 from WebBrowser import seleniumGetData
+import datetime
+import numpy as np
+from pandas_datareader import data
+import pandas_datareader.data as web
+
+
+
 
 # 取得絕對路徑，以便保存下載歷史資料
 absPath = os.path.abspath("../")
 historyDataPath = os.path.join(absPath, "data")
 
+'''
 ans = input('是否要下載歷史資料? (y/n)\n')
 if ans.lower() == 'y':
     while True:
@@ -36,6 +44,8 @@ while True:
         break
     else:
         print('輸入錯誤')
+'''
+
 
 os.system('pause')
 
