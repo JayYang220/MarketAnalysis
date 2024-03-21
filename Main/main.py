@@ -1,7 +1,5 @@
-import pandas as pd
 import os
 from API import StockManager
-
 
 def main():
     # 取得絕對路徑及建立StockManager，管理下載的歷史資料
@@ -20,9 +18,10 @@ def main():
             except:
                 if ans.lower() == "a":
                     stockName = input("請輸入股票名稱:\n")
-                    res = manager.createStockClass(stockName)
-                    if res is not True:
-                        print(res)
+                    try:
+                        manager.createStockClass(stockName)
+                    except Exception as e:
+                        print(e)
 
                 elif ans.lower() == "u":
                     manager.updateAll()

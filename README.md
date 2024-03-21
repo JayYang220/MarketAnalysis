@@ -6,3 +6,6 @@
 
 ### 2024/3/17 version 1.0.0
 -- 初始化版本，可抓取Yahoo Finance資料，轉換成DataFrame
+
+### 2024/3/22 version 1.1.0
+-- 更新資料獲取API

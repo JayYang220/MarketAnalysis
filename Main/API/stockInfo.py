@@ -25,22 +25,21 @@ class StockManager:
         return stockClassList
 
     def createStockClass(self, stockName: str) -> [bool]:
-        if stockName in self.stockNameList:
-            return "股票名稱已存在"
-        '''
+        """
         :param stockName:stockName
         :return: 成功時回傳Ture,否則False
-        '''
+        """
+        if stockName in self.stockNameList:
+            raise "股票名稱已存在"
         stock = Stock(self.historyDataPath, stockName)
         stock.getInfo()
 
         if stock.info is None:
-            return "股票名稱錯誤或其他錯誤"
+            raise "股票名稱錯誤或其他錯誤"
         else:
             stock.updateHistory()
             self.stockList.append(stock)
             self.stockNameList.append(stockName)
-            return True
 
     def updateAll(self):
         for stock in self.stockList:
