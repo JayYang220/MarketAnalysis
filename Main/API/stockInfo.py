@@ -1,4 +1,6 @@
 import yfinance as yf
+# Guide https://pypi.org/project/yfinance/
+# Guide https://algotrading101.com/learn/yahoo-finance-api-guide/
 import os
 import pandas as pd
 import pandas_datareader as pdr
@@ -31,25 +33,24 @@ class StockManager:
             stockClassList.append(Stock(self.historyDataPath, stockName))
         return stockClassList
 
-    def createStockClass(self, stockName: str) -> [bool]:
-        """
-        :param stockName:stockName
-        :return: 成功時回傳Ture,否則False
-        """
+    def createStockClass(self, stockName: str):
         if stockName in self.stockNameList:
-            raise "股票已存在"
+            print("This stock already exists in the list.")
+            return
 
-        # 嘗試downloadCompanyInfo，判斷股票名稱使否存在
+        # 嘗試downloadTicker，若名稱不存在時會拋出錯誤
         try:
             stock = Stock(self.historyDataPath, stockName)
-            stock.downloadCompanyInfo()
+            stock.downloadTicker()
+            stock.downloadHistoryData()
         except Exception as e:
             print(e)
+            print("You can retrieve stock names from Yahoo Finance at https://finance.yahoo.com/")
             return
 
         self.stockList.append(stock)
         self.stockNameList.append(stockName)
-        print(f"{stock} 加入成功")
+        print(f"{stockName} Addition completed")
 
 
     def updateAll(self):
@@ -60,32 +61,34 @@ class StockManager:
     def showStockList(self):
         """顯示庫存的CSV名稱"""
         for index, stock in enumerate(self.stockNameList):
-            print(f"{index:<3d} {stock}")
+            print(f"{index:>3d}. {stock}")
 
 class Stock:
     def __init__(self, historyDataPath, stockName: str):
         self.stockName = stockName
         self.historyDataFile = os.path.join(historyDataPath, self.stockName + ".csv")
 
-        # 公司資訊及歷史股價初始化為None，待使用者輸入需求時再抓取
+        # 初始化為None，待使用者輸入需求時再抓取
+        self.ticker = None
         self.companyInfo = None
         self.historyData = None
 
+    def downloadTicker(self):
+        """下載 ticker"""
+        self.ticker = yf.Ticker(self.stockName)
+        self.companyInfo = self.ticker.info
+
+        # 股票名稱錯誤時，仍會返回一個dict，利用下列特徵確認股票名稱是否正確
+        if 'previousClose' not in self.ticker.info:
+            raise AssertionError("Stock name error.")
+        self.historyData = self.ticker.history(period='max', interval='1d')
+
     def showCompanyInfo(self):
         """顯示 CompanyInfo"""
-        if self.companyInfo is None:
-            self.downloadCompanyInfo()
+        if self.ticker is None:
+            self.downloadTicker()
         for key in self.companyInfo.keys():
             print(f"{key:30s} {self.companyInfo[key]}")
-
-    def downloadCompanyInfo(self):
-        """Download CompanyInfo"""
-        info = yf.Ticker(self.stockName).info
-        # 不確定為什麼stockName不存在時，仍會回傳dict，使用下面的特徵來判定是否成功
-        if info["trailingPegRatio"] is not None:
-            self.companyInfo = info
-        else:
-            raise AssertionError("股票名稱錯誤或其他錯誤")
 
     def showHistoryData(self):
         """顯示 HistoryData"""
@@ -100,7 +103,7 @@ class Stock:
         except Exception as e:
             print(e)
 
-    def downloadHistoryData(self, period: str = "max", interval: str = '1d'):
+    def downloadHistoryData(self, period: str = 'max', interval: str = '1d'):
         """Download HistoryData"""
         # 舊方法
         # yf.pdr_override()
@@ -108,8 +111,12 @@ class Stock:
         # end_date = dt.datetime(2100, 3, 18)
         # self.history = web.get_data_yahoo(self.stockName, start_date, end_date)
 
-        self.historyData = yf.download(self.stockName, period=period, interval=interval)
+        self.downloadTicker()
         self.historyData.to_csv(self.historyDataFile)
-        print(f"{self.stockName:10s} 更新完成")
+        print(f"{self.stockName} Update completed")
 
-
+# 測試用
+if __name__ == "__main__":
+    stockName = "2330.TW"
+    ticker = yf.Ticker(stockName)
+    print(ticker.info)
