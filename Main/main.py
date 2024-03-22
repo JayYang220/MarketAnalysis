@@ -15,6 +15,8 @@ def main():
                 if 0 <= ans < len(manager.stockList):
                     index = ans
                     break
+                else:
+                    print("輸入錯誤")
             except:
                 if ans.lower() == "a":
                     stockName = input("請輸入股票名稱:\n")
@@ -31,11 +33,11 @@ def main():
         while True:
             ans = input("選擇功能 (I=Show Company Info, H=Show History Data, U=UpdateHistoryData, 0=Return)\n")
             if ans.lower() == "i":
-                manager.stockList[index].showInfo()
+                manager.stockList[index].showCompanyInfo()
             elif ans.lower() == "h":
                 manager.stockList[index].showHistoryData()
             elif ans.lower() == "u":
-                manager.stockList[index].updateHistory()
+                manager.stockList[index].downloadHistoryData()
             elif ans == "0":
                 break
 

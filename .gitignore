@@ -152,4 +152,4 @@ cython_debug/
 #.idea/
 
 # Costomer
-Data/*
+Data/
