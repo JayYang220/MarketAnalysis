@@ -46,11 +46,12 @@ class StockManager:
         return stock_class_list
 
     def create_stock_class(self, stock_name: str):
+        """try create"""
         if stock_name in self.stock_name_list:
             print("This stock already exists in the list.")
             return
 
-        # 嘗試download ticker
+        # try downloading ticker
         try:
             stock = Stock(self.history_data_folder_path, stock_name)
 
@@ -86,9 +87,9 @@ class StockManager:
 class Stock:
     __slots__ = ["stock_name", "history_data_file_path", "ticker", "company_info", "history_data"]
 
-    def __init__(self, historyDataPath, stock_name: str):
+    def __init__(self, history_data_folder_path, stock_name: str):
         self.stock_name = stock_name
-        self.history_data_file_path = os.path.join(historyDataPath, self.stock_name + ".csv")
+        self.history_data_file_path = os.path.join(history_data_folder_path, self.stock_name + ".csv")
 
         # 初始化為None，待使用者輸入需求時再抓取
         self.ticker = None
