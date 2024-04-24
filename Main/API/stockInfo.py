@@ -116,13 +116,14 @@ class Stock:
         """顯示 CompanyInfo"""
         if self.ticker is None:
             self.ticker = self.download_ticker()
-            if self.ticker:
-                self.company_info = ticker.info
-                for key in self.company_info.keys():
-                    print(f"{key:30s} {self.company_info[key]}")
+            if self.ticker is False:
+                return
 
-        elif self.company_info is None:
+        if self.company_info is None:
             self.company_info = self.ticker.info
+
+        for key in self.company_info.keys():
+            print(f"{key:30s} {self.company_info[key]}")
 
     def show_history_data(self):
         """顯示 HistoryData"""
