@@ -111,7 +111,7 @@ class Stock:
 
         except Exception as e:
             print("Error:", e)
-            raise False
+            return False
 
     def show_company_info(self):
         """顯示 CompanyInfo"""

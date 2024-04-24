@@ -2,7 +2,7 @@ import os
 from API import StockManager
 
 debug = False
-__version__ = "1.2.0"
+__version__ = "1.2.4"
 
 
 def main():
@@ -17,11 +17,9 @@ def main():
 
             try:
                 ans = int(ans)
-                if 0 <= ans < len(manager.stock_class_list):
-                    index = ans
+                index = ans if 0 <= ans < len(manager.stock_class_list) else print("Input error.")
+                if index is not None:
                     break
-                else:
-                    print("Input error")
 
             except ValueError:
                 if ans.lower() == "a":
